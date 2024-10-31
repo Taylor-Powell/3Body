@@ -57,29 +57,29 @@ namespace basic
     template <typename TE>
 	void sort_vec(TE& x, char flag) {
         // Initialize variables
-        auto minx = x(0), tempx = x(0);
+        auto minx = x[0], tempx = x[0];
         std::size_t n = x.size();
 
         // Each loop here results in the next smallest value being
         // sorted to top of the subarray
         for (std::size_t idx = 0; idx < n; idx++)
         {
-            minx = x(idx);
+            minx = x[idx];
             for (std::size_t jdx = idx; jdx < n; jdx++)
             {
-                if ((x(jdx) > minx) && (flag == 'D'))
+                if ((x[jdx] > minx) && (flag == 'D'))
                 {
                     tempx = minx;
-                    minx = x(jdx);
-                    x(jdx) = tempx;
-                    x(idx) = minx;
+                    minx = x[jdx];
+                    x[jdx] = tempx;
+                    x[idx] = minx;
                 }
-                else if ((x(jdx) < minx) && (flag == 'A'))
+                else if ((x[jdx] < minx) && (flag == 'A'))
                 {
                     tempx = minx;
-                    minx = x(jdx);
-                    x(jdx) = tempx;
-                    x(idx) = minx;
+                    minx = x[jdx];
+                    x[jdx] = tempx;
+                    x[idx] = minx;
                 }
             }
         }
@@ -160,11 +160,13 @@ namespace basic
 
     void genPWLinearContour(Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx, Eigen::VectorXd& wts, cmplx xvals[], int Npts);
 
+    void printClockInfo();
     inline std::chrono::high_resolution_clock::time_point clock_start() {
         return std::chrono::high_resolution_clock::now();
     }
 
     void clock_stop(std::chrono::high_resolution_clock::time_point start);
+    
 
 }
 

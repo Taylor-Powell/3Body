@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <ctime>
 #include "BasicFuncs.h"
 
 // 
@@ -7,7 +8,26 @@ typedef std::complex<double> cmplx;
 
 const double pi = 3.14159265358979323846;
 const cmplx j(0.0, 1.0);
-
+namespace {    
+    // Code taken from The C++ Standard Library, 2nd Edition by Nicolai M. Josuttis
+    template <typename C>
+    void printClockData () {
+        std::cout << "- precision: ";
+        // if time unit is less than or equal to one millisecond
+        typedef typename C::period P;   // type of time unit
+        if (std::ratio_less_equal<P,std::milli>::value) {
+            // convert to and print as milliseconds
+            typedef typename std::ratio_multiply<P,std::kilo>::type TT;
+            std::cout << std::fixed << std::setprecision(10) << double(TT::num)/TT::den
+                << " milliseconds" << std::endl;
+        }
+        else {
+            // print as seconds
+            std::cout << std::fixed << double(P::num)/P::den << " seconds" << std::endl;
+        }
+        std::cout << "- is_steady: " << std::boolalpha << C::is_steady << std::endl;
+    }
+}
 namespace basic
 {
     cmplx mySqrt(cmplx z) {
@@ -130,14 +150,30 @@ namespace basic
         }
     }
 
+    void printClockInfo() {
+        std::cout << "\nsystem_clock: " << std::endl;
+        printClockData<std::chrono::system_clock>();
+        std::cout << "\nhigh_resolution_clock: " << std::endl;
+        printClockData<std::chrono::high_resolution_clock>();
+        std::cout << "\nsteady_clock: " << std::endl;
+        printClockData<std::chrono::steady_clock>();
+    }
+
     void clock_stop(std::chrono::high_resolution_clock::time_point start) {
         /// Time information
         auto stop = std::chrono::high_resolution_clock::now();
+        auto sys_stop = std::chrono::system_clock::now();
         double duration = static_cast<double>((std::chrono::duration_cast<std::chrono::milliseconds>(stop - start)).count());
 
+        auto endtime = std::chrono::system_clock::to_time_t(sys_stop);
+        std::cout << "\nFinished computation on " << std::ctime(&endtime);
         if (duration < 1000.0) 
-            std::cout << "\nTime: " << duration << " milliseconds." << std::endl;
+            std::cout << "Elapsed time: " << std::fixed 
+                      << duration << " milliseconds." 
+                      << std::endl;
         else 
-            std::cout << "\nTime: " << duration / 1000.0 << " seconds." << std::endl;
+            std::cout << "Elapsed time: " << std::fixed 
+                      << duration / 1000.0 << " seconds." 
+                      << std::endl;
     }
 }
