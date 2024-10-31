@@ -1,10 +1,6 @@
 #include <iostream>
-#include <iomanip>
-#include <fstream>
 #include <complex>
-#include <iterator>
 #include <string>
-#include <Eigen/Dense>
 #include "BasicFuncs.h"
 #include "free_2part_spec/FreeSpec.h"
 
@@ -39,7 +35,6 @@ int main(int argc, char** argv) {
     catch (std::string s) {
         std::cout << "\n\nERROR IN PROGRAM:\n" << s << std::endl;
     }
-
     basic::clock_stop(clock);
     return 0;
 }

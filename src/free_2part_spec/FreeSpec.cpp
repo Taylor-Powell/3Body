@@ -80,7 +80,7 @@ namespace FreeSpec {
         }
     }
 
-    std::vector<double> Data::gen_free_spec_2part(double L, char flag = 'A') {
+    std::vector<double> Data::gen_free_spec_2part(double L, char flag) {
         /*
             Generates the 2 particle free spectrum for any two masses m^2={m1sq, m2sq}
             Duplicate entries are omitted, and the resulting spectra is sorted in ascending or descending order at the end of the function with myMath::sort_vec()
