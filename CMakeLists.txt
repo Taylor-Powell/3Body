@@ -8,7 +8,9 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(ThreeBody
                src/main.cpp
                src/BasicFuncs.cpp
-               src/BasicFuncs.hpp)
+               src/BasicFuncs.h
+               src/free_2part_spec/FreeSpec.h
+               src/free_2part_spec/FreeSpec.cpp)
 
 set(CMAKE_CXX_FLAGS "-O2")
 set(CMAKE_C_FLAGS "-O2")
@@ -20,7 +22,3 @@ target_link_libraries(ThreeBody MPI::MPI_CXX)
 
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 target_link_libraries(ThreeBody Eigen3::Eigen)
-
-add_library(emsr INTERFACE)
-target_include_directories(emsr	INTERFACE ~/tmp/root_search/include/)
-target_link_libraries(ThreeBody emsr)

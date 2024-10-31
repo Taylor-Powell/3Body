@@ -1,42 +1,86 @@
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <complex>
-#include <sstream>
 #include <string>
+#include <sstream>
+#include <vector>
+#include <cmath>
 #include <Eigen/Dense>
-#include "BasicFuncs.hpp"
-typedef std::complex<double> cmplx;
+#include "FreeSpec.h"
+#include "../BasicFuncs.h"
 
-const double pi = 3.14159265358979323846;
-const cmplx j(0.0, 1.0);
-const double hc = 197.3269804; // MeV*fm
+namespace {
+    /// typedef for complex values
+    typedef std::complex<double> cmplx;
 
-////////////////////////////// Amps Namespace /////////////////////////////
+    /// General constants
+    const double pi = 3.14159265358979323846;
+    const cmplx j(0.0, 1.0);
+    const double hc = 197.3269804; // MeV*fm
+}
 
-namespace FreeSpec
-{
-
-    double free_spec_2part(double L, int n[], int nP[], double m1sq, double m2sq)
-    {
-        /*
-            For any two particles in a finite cubic box, returns the total energy of the system
-            @param n1[]   quantized momenta of a particle 
-            @param nP[]   quantized momenta of the frame
-        */
-
-        double p1_sq = 0.0;
-        double p2_sq = 0.0;
-        for (int i = 0; i < 3; i++) {
-            p1_sq += (double)(n[i] * n[i]);
-            p2_sq += (double)((nP[i] - n[i]) * (nP[i] - n[i]));
+namespace FreeSpec {
+    void Data::readData(std::string infile_name) {
+        std::ifstream file (infile);
+        if (!file) {
+            std::string errormsg = "Failed to open file in ";
+            errormsg += __func__;
+            throw errormsg;
         }
-        p1_sq *= pow(2.0 * pi / L, 2);
-        p2_sq *= pow(2.0 * pi / L, 2);
-        return sqrt(m1sq + p1_sq) + sqrt(m2sq + p2_sq);
+        else {
+            std::string ignore, var, val;
+            
+            while (std::getline(file, var)) {
+                std::stringstream param(var);
+                std::getline(param, var, '=');
+                if (var == "nP") param >> nP_str;
+                else if (var == "Lmin") param >> Lmin;
+                else if (var == "Lmax") param >> Lmax;
+                else if (var == "dL") param >> dL;
+                else if (var == "Emax") param >> Emax;
+                else if (var == "msq") param >> msq[0];
+                else continue;
+            }
+        }
     }
 
-    Eigen::VectorXd gen_free_spec_2part(double L, int nP[], double Ecm_max, double m1sq, double m2sq, char flag)
-    {
+    void Data::printParams() {
+        std::cout << "\nFile parameters are:\n"
+                  << std::setprecision(2) << std::fixed
+                  << Lmin << " <= L <= " << Lmax
+                  << " with dL = " << dL
+                  << "\nnP = " << nP_str
+                  << "\nEmax = " << Emax
+                  << "\nmsq = " << msq[0]
+                  << std::defaultfloat
+                  << std::endl;
+    }
+
+    void Data::free_2_out() {
+
+        std::ofstream out;
+        out.open(outfile, std::ios::out | std::ios::trunc);
+        if (!out) {
+            std::string errormsg = "Failed to open file in ";
+            errormsg += __func__;
+            throw errormsg;
+        }
+        else {
+            double L = Lmax;
+            while (L >= Lmin) {
+                std::vector<double> Free_E1 = Data::gen_free_spec_2part(L, 'A');
+                out << L;
+                for (int i = 0; i < Free_E1.size(); i++) out << ',' << Free_E1[i];
+                out << '\n';
+
+                L -= dL;
+            }
+            out.close();
+        }
+    }
+
+    std::vector<double> Data::gen_free_spec_2part(double L, char flag = 'A') {
         /*
             Generates the 2 particle free spectrum for any two masses m^2={m1sq, m2sq}
             Duplicate entries are omitted, and the resulting spectra is sorted in ascending or descending order at the end of the function with myMath::sort_vec()
@@ -51,7 +95,7 @@ namespace FreeSpec
         double En, Ecm;
         int e = 0;
         bool check = true;
-        double P_sq = pow(2.0 * pi / L, 2) * (double)(basic_funcs::dotProd(nP, nP, 3));
+        double P_sq = std::pow(2.0 * pi / L, 2) * (double)(basic::dotProd(nP, nP, 3));
         const int n_max = 5;
         int list[2 * n_max + 1];
         for (int i = 0; i < 2 * n_max + 1; i++) {
@@ -66,11 +110,11 @@ namespace FreeSpec
                 n[1] = j0;
                 for (int k0 : list) {
                     n[2] = k0;
-                    En = free_spec_2part(L, n, nP, m1sq, m2sq);
-                    Ecm = sqrt(En * En - P_sq);
+                    En = Data::free_spec_2part(L, n);
+                    Ecm = std::sqrt(En * En - P_sq);
                     for (int m = 0; m < e; m++)
                         if (Ecm == EValTemp[m]) check = false;
-                    if ((check == true) && (Ecm < Ecm_max)) {
+                    if ((check == true) && (Ecm < Emax)) {
                         EValTemp[e] = Ecm;
                         e += 1;
                     }
@@ -78,27 +122,29 @@ namespace FreeSpec
                 }
             }
         }
-        Eigen::VectorXd Evals(e);
-        for (int i = 0; i < e; i++)
-            Evals(i) = EValTemp[i];
-        basic_funcs::sort_vec(Evals, flag);
+        std::vector<double> Evals(e);
+        for (int i = 0; i < e; i++) Evals[i] = EValTemp[i];
+        basic::sort_vec(Evals, flag);
         return Evals;
     }
 
-    void free_2_out(std::string f, double Lmax, double Lmin, double dL, int nP[], double Emax, double msq[])
-    {
-        std::fstream file;
+    double Data::free_spec_2part(double L, int n[]) {
+        /*
+            For any two particles in a finite cubic box, returns the total energy of the system
+            @param n1[]   quantized momenta of a particle 
+            @param nP[]   quantized momenta of the frame
+        */
 
-        file.open(f, std::ios::out | std::ios::trunc);
-        double L = Lmax;
-        while (L >= Lmin) {
-            Eigen::VectorXd Free_E1 = gen_free_spec_2part(L, nP, Emax, msq[0], msq[1], 'A');
-            file << L;
-            for (int i = 0; i < Free_E1.size(); i++) file << ',' << Free_E1(i);
-            file << '\n';
-
-            L -= dL;
+        double p1_sq = 0.0;
+        double p2_sq = 0.0;
+        for (int i = 0; i < 3; i++) {
+            p1_sq += (double)(n[i] * n[i]);
+            p2_sq += (double)((nP[i] - n[i]) * (nP[i] - n[i]));
         }
-        file.close();
+        p1_sq *= std::pow(2.0 * pi / L, 2);
+        p2_sq *= std::pow(2.0 * pi / L, 2);
+        return std::sqrt(msq[0] + p1_sq) + std::sqrt(msq[0] + p2_sq);
     }
 }
+
+

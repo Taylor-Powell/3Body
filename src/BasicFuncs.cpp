@@ -1,9 +1,6 @@
 #include <iostream>
-#include <complex>
 #include <iomanip>
-#include <Eigen/Dense>
-#include <chrono>
-#include "BasicFuncs.hpp"
+#include "BasicFuncs.h"
 
 // 
 typedef std::complex<double> cmplx;
@@ -11,62 +8,52 @@ typedef std::complex<double> cmplx;
 const double pi = 3.14159265358979323846;
 const cmplx j(0.0, 1.0);
 
-namespace basic_funcs
+namespace basic
 {
-    cmplx mySqrt(cmplx z)
-    {
+    cmplx mySqrt(cmplx z) {
         return j * sqrt(-z);
     }
 
-    cmplx q_cm(cmplx s, double msq)
-    {
+    cmplx q_cm(cmplx s, double msq) {
         return 0.5 * mySqrt(s - 4.0 * msq);
     }
 
-    cmplx q_cm_nonI(cmplx s, double m1sq, double m2sq)
-    {
+    cmplx q_cm_nonI(cmplx s, double m1sq, double m2sq) {
         return kallen(s, m1sq, m2sq) / (2.0 * sqrt(s));
     }
 
-    cmplx phase_space(cmplx s, double m1sq, double m2sq, double xi)
-    {
+    cmplx phase_space(cmplx s, double m1sq, double m2sq, double xi) {
         if (m1sq == m2sq) return xi * q_cm(s, m1sq) / (8.0 * pi * sqrt(s));
         return xi * q_cm_nonI(s, m1sq, m2sq) / (8.0 * pi * sqrt(s));
     }
 
-    cmplx kallen(cmplx x, cmplx y, cmplx z)
-    {
+    cmplx kallen(cmplx x, cmplx y, cmplx z) {
         cmplx val = x * x + y * y + z * z;
         val -= 2.0 * (x * y + x * z + y * z);
         return mySqrt(val);
     }
 
-    cmplx Convert_k_to_s(cmplx k, cmplx s, double msq)
-    {
+    cmplx Convert_k_to_s(cmplx k, cmplx s, double msq) {
         return (pow(sqrt(s) - sqrt(msq + k * k), 2) - k * k);
     }
 
-    cmplx Convert_s_to_k(cmplx s2k, cmplx s, double msq)
-    {
+    cmplx Convert_s_to_k(cmplx s2k, cmplx s, double msq) {
         return kallen(s2k, s, msq) / (2.0 * sqrt(s));
     }    
 
-    void defaultRule(Eigen::VectorXd& wts)
-    {
+    void defaultRule(Eigen::VectorXd& wts) {
         for (int idx = 0; idx < wts.size(); idx++) wts(idx) = 1.0;
         return;
     }
 
-    void trapRule(Eigen::VectorXd& wts)
-    {
+    void trapRule(Eigen::VectorXd& wts) {
         wts(0) = 0.5;
         wts(wts.size() - 1) = 0.5;
         for (int idx = 1; idx < wts.size() - 1; idx++) wts(idx) = 1.0;
         return;
     }
 
-    void sim38(Eigen::VectorXd& wts)
-    {
+    void sim38(Eigen::VectorXd& wts) {
         int N = wts.size();
         int rem = (N - 1) % 3;
         wts(0) = 0.375;
@@ -86,8 +73,7 @@ namespace basic_funcs
         }
     }
 
-    void straight(cmplx xmin, cmplx xmax, Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx)
-    {
+    void straight(cmplx xmin, cmplx xmax, Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx) {
         cmplx dt = (xmax - xmin) / ((double)xvec.size());
         for (int idx = 0; idx < xvec.size(); idx++) {
             xvec(idx) = xmin + (double)idx * dt;
@@ -96,8 +82,7 @@ namespace basic_funcs
         return;
     }
 
-    void upperCirc(double xmin, double xmax, Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx)
-    {
+    void upperCirc(double xmin, double xmax, Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx) {
         double x0 = (xmax + xmin) / 2.0;
         double xr = (xmax - xmin) / 2.0;
         int N = xvec.size();
@@ -113,8 +98,7 @@ namespace basic_funcs
         }
     }
 
-    void lowerCirc(double xmin, double xmax, Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx)
-    {
+    void lowerCirc(double xmin, double xmax, Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx) {
         double x0 = (xmax + xmin) / 2.0;
         double xr = (xmax - xmin) / 2.0;
         int N = xvec.size();
@@ -130,8 +114,7 @@ namespace basic_funcs
         }
     }
 
-    void genPWLinearContour(Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx, Eigen::VectorXd& wts, cmplx xvals[], int Npts)
-    {
+    void genPWLinearContour(Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx, Eigen::VectorXd& wts, cmplx xvals[], int Npts) {
         int M = xvec.size() / (Npts - 1);
         Eigen::VectorXcd xseg(M);
         Eigen::VectorXcd dxseg(M);
@@ -147,8 +130,7 @@ namespace basic_funcs
         }
     }
 
-    void clock_stop(std::chrono::high_resolution_clock::time_point start)
-    {
+    void clock_stop(std::chrono::high_resolution_clock::time_point start) {
         /// Time information
         auto stop = std::chrono::high_resolution_clock::now();
         double duration = static_cast<double>((std::chrono::duration_cast<std::chrono::milliseconds>(stop - start)).count());

@@ -2,4 +2,5 @@
 build/
 data/
 python/
+.DS*
 .vscode/
