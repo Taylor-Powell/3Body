@@ -9,21 +9,21 @@
 
 namespace basic
 {
-    typedef std::complex<double> cmplx;
-    const cmplx j(0.0, 1.0);
+    typedef std::complex<double> cd;
+    const cd j(0.0, 1.0);
 
     // Function declarations
-    cmplx kallen(cmplx x, cmplx y, cmplx z);
-    cmplx phase_space(cmplx s, double m1sq, double m2sq, double xi = 1.0);
+    cd kallen(cd x, cd y, cd z);
+    cd phase_space(cd s, double m1sq, double m2sq, double xi = 1.0);
 
     // Inline functions
-    inline cmplx mySqrt(cmplx z) { return j * sqrt(-z); } 
-    inline cmplx q_cm(cmplx s, double msq = 1.0) { return 0.5 * mySqrt(s - 4.0 * msq); }
-    inline cmplx q_cm_nonI(cmplx s, double m1sq, double m2sq) 
+    inline cd mySqrt(cd z) { return j * sqrt(-z); } 
+    inline cd q_cm(cd s, double msq = 1.0) { return 0.5 * mySqrt(s - 4.0 * msq); }
+    inline cd q_cm_nonI(cd s, double m1sq, double m2sq) 
         { return kallen(s, m1sq, m2sq) / (2.0 * sqrt(s)); }
-    inline cmplx Convert_k_to_s(cmplx k, cmplx s, double msq)
+    inline cd Convert_k_to_s(cd k, cd s, double msq)
         { return (pow(sqrt(s) - sqrt(msq + k * k), 2) - k * k); }
-    inline cmplx Convert_s_to_k(cmplx s2k, cmplx s, double msq)
+    inline cd Convert_s_to_k(cd s2k, cd s, double msq)
         { return kallen(s2k, s, msq) / (2.0 * sqrt(s)); }
 
     // Templated functions
@@ -60,19 +60,19 @@ namespace basic
 
 namespace basic_Eigen 
 {
-    typedef std::complex<double> cmplx;
-    const cmplx j(0.0, 1.0);
+    typedef std::complex<double> cd;
+    const cd j(0.0, 1.0);
     
     // Function declarations
     void sim38(Eigen::VectorXd& wts);
     void defaultRule(Eigen::VectorXd& wts);
     void trapRule(Eigen::VectorXd& wts);
 
-    void straight(cmplx xmin, cmplx xmax, Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx);
+    void straight(cd xmin, cd xmax, Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx);
     void upperCirc(double xmin, double xmax, Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx);
     void lowerCirc(double xmin, double xmax, Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx);
 
-    void genPWLinearContour(Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx, Eigen::VectorXd& wts, cmplx xvals[], int Npts);
+    void genPWLinearContour(Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx, Eigen::VectorXd& wts, cd xvals[], int Npts);
 
     // Templated Functions
     template <typename TE>

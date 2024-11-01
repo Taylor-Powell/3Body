@@ -28,13 +28,13 @@ namespace {
 }
 namespace basic
 {
-    cmplx phase_space(cmplx s, double m1sq, double m2sq, double xi) {
+    cd phase_space(cd s, double m1sq, double m2sq, double xi) {
         if (m1sq == m2sq) return xi * q_cm(s, m1sq) / (8.0 * std::numbers::pi * sqrt(s));
         return xi * q_cm_nonI(s, m1sq, m2sq) / (8.0 * std::numbers::pi * sqrt(s));
     }
 
-    cmplx kallen(cmplx x, cmplx y, cmplx z) {
-        cmplx val = x * x + y * y + z * z;
+    cd kallen(cd x, cd y, cd z) {
+        cd val = x * x + y * y + z * z;
         val -= 2.0 * (x * y + x * z + y * z);
         return mySqrt(val);
     }
@@ -99,8 +99,8 @@ namespace basic_Eigen
         }
     }
 
-    void straight(cmplx xmin, cmplx xmax, Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx) {
-        cmplx dt = (xmax - xmin) / ((double)xvec.size());
+    void straight(cd xmin, cd xmax, Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx) {
+        cd dt = (xmax - xmin) / ((double)xvec.size());
         for (int idx = 0; idx < xvec.size(); idx++) {
             xvec(idx) = xmin + (double)idx * dt;
             dx(idx) = dt;
@@ -112,7 +112,7 @@ namespace basic_Eigen
         double xr = (xmax - xmin) / 2.0;
         int N = xvec.size();
         double dt = 1.0 / ((double)(N - 1));
-        cmplx prefac = - j * std::numbers::pi * xr * dt;
+        cd prefac = - j * std::numbers::pi * xr * dt;
         for (int idx = 0; idx < N; idx++) {
             xvec(idx) = x0 + xr * exp(-j * std::numbers::pi * ((double)idx * dt + 1.0));
             dx(idx) = prefac * exp(-j * std::numbers::pi * ((double)idx * dt + 1.0));
@@ -128,7 +128,7 @@ namespace basic_Eigen
         double xr = (xmax - xmin) / 2.0;
         int N = xvec.size();
         double dt = 1.0 / ((double)(N - 1));
-        cmplx prefac = j * std::numbers::pi * xr * dt;
+        cd prefac = j * std::numbers::pi * xr * dt;
         for (int idx = 0; idx < N; idx++) {
             xvec(idx) = x0 + xr * exp(j * std::numbers::pi * ((double)idx * dt - 1.0));
             dx(idx) = prefac * exp(j * std::numbers::pi * ((double)idx * dt - 1.0));
@@ -139,7 +139,7 @@ namespace basic_Eigen
         }
     }
 
-    void genPWLinearContour(Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx, Eigen::VectorXd& wts, cmplx xvals[], int Npts) {
+    void genPWLinearContour(Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx, Eigen::VectorXd& wts, cd xvals[], int Npts) {
         int M = xvec.size() / (Npts - 1);
         Eigen::VectorXcd xseg(M);
         Eigen::VectorXcd dxseg(M);

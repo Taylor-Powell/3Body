@@ -9,10 +9,10 @@
 
 namespace {
     /// typedef for complex values
-    typedef std::complex<double> cmplx;
+    typedef std::complex<double> cd;
 
     /// General constants
-    const cmplx j(0.0, 1.0);
+    const cd j(0.0, 1.0);
     const double hc = 197.3269804; // MeV*fm
 }
 

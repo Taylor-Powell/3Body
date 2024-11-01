@@ -8,7 +8,7 @@
 
 namespace {
     /// typedef for complex values
-    typedef std::complex<double> cmplx;
+    typedef std::complex<double> cd;
 
     int usage(int argc, char** argv) {
         std::cerr << "Usage: " << argv[0] << " <input file> <output file>" << std::endl;
