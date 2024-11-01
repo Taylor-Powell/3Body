@@ -6,6 +6,7 @@
 #include <sstream>
 #include <vector>
 #include <cmath>
+#include <numeric>
 #include <Eigen/Dense>
 #include "FreeSpec.h"
 #include "../BasicFuncs.h"
@@ -95,7 +96,9 @@ namespace FreeSpec {
         double En, Ecm;
         int e = 0;
         bool check = true;
-        double P_sq = std::pow(2.0 * pi / L, 2) * (double)(basic::dotProd(nP, nP, 3));
+        double P_sq = std::pow(2.0 * pi / L, 2);
+        // std::inner_product(address_nP[0], add_nP[2], add_nP[0], initial_value)
+        P_sq *= std::inner_product(nP, nP+3, nP, 0.0);
         const int n_max = 5;
         int list[2 * n_max + 1];
         for (int i = 0; i < 2 * n_max + 1; i++) {
@@ -124,7 +127,7 @@ namespace FreeSpec {
         }
         std::vector<double> Evals(e);
         for (int i = 0; i < e; i++) Evals[i] = EValTemp[i];
-        basic::sort_vec(Evals, flag);
+        basic_Eigen::sort_vec(Evals, flag);
         return Evals;
     }
 

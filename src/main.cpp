@@ -1,6 +1,8 @@
 #include <iostream>
 #include <complex>
 #include <string>
+#include <numeric>
+#include <Eigen/Dense>
 #include "BasicFuncs.h"
 #include "free_2part_spec/FreeSpec.h"
 

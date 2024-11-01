@@ -4,10 +4,7 @@
 #include "BasicFuncs.h"
 
 // 
-typedef std::complex<double> cmplx;
 
-const double pi = 3.14159265358979323846;
-const cmplx j(0.0, 1.0);
 namespace {    
     // Code taken from The C++ Standard Library, 2nd Edition by Nicolai M. Josuttis
     template <typename C>
@@ -30,18 +27,6 @@ namespace {
 }
 namespace basic
 {
-    cmplx mySqrt(cmplx z) {
-        return j * sqrt(-z);
-    }
-
-    cmplx q_cm(cmplx s, double msq) {
-        return 0.5 * mySqrt(s - 4.0 * msq);
-    }
-
-    cmplx q_cm_nonI(cmplx s, double m1sq, double m2sq) {
-        return kallen(s, m1sq, m2sq) / (2.0 * sqrt(s));
-    }
-
     cmplx phase_space(cmplx s, double m1sq, double m2sq, double xi) {
         if (m1sq == m2sq) return xi * q_cm(s, m1sq) / (8.0 * pi * sqrt(s));
         return xi * q_cm_nonI(s, m1sq, m2sq) / (8.0 * pi * sqrt(s));
@@ -53,24 +38,44 @@ namespace basic
         return mySqrt(val);
     }
 
-    cmplx Convert_k_to_s(cmplx k, cmplx s, double msq) {
-        return (pow(sqrt(s) - sqrt(msq + k * k), 2) - k * k);
+    void printClockInfo() {
+        std::cout << "\nsystem_clock: " << std::endl;
+        printClockData<std::chrono::system_clock>();
+        std::cout << "\nhigh_resolution_clock: " << std::endl;
+        printClockData<std::chrono::high_resolution_clock>();
+        std::cout << "\nsteady_clock: " << std::endl;
+        printClockData<std::chrono::steady_clock>();
     }
 
-    cmplx Convert_s_to_k(cmplx s2k, cmplx s, double msq) {
-        return kallen(s2k, s, msq) / (2.0 * sqrt(s));
-    }    
+    void clock_stop(std::chrono::high_resolution_clock::time_point start) {
+        /// Time information
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto sys_stop = std::chrono::system_clock::now();
+        double duration = static_cast<double>((std::chrono::duration_cast<std::chrono::milliseconds>(stop - start)).count());
 
+        auto endtime = std::chrono::system_clock::to_time_t(sys_stop);
+        std::cout << "\nFinished computation on " << std::ctime(&endtime);
+        if (duration < 1000.0) 
+            std::cout << "Elapsed time: " << std::fixed 
+                      << duration << " milliseconds." 
+                      << std::endl;
+        else 
+            std::cout << "Elapsed time: " << std::fixed 
+                      << duration / 1000.0 << " seconds." 
+                      << std::endl;
+    }
+}
+
+namespace basic_Eigen
+{
     void defaultRule(Eigen::VectorXd& wts) {
         for (int idx = 0; idx < wts.size(); idx++) wts(idx) = 1.0;
-        return;
     }
 
     void trapRule(Eigen::VectorXd& wts) {
         wts(0) = 0.5;
         wts(wts.size() - 1) = 0.5;
         for (int idx = 1; idx < wts.size() - 1; idx++) wts(idx) = 1.0;
-        return;
     }
 
     void sim38(Eigen::VectorXd& wts) {
@@ -99,7 +104,6 @@ namespace basic
             xvec(idx) = xmin + (double)idx * dt;
             dx(idx) = dt;
         }
-        return;
     }
 
     void upperCirc(double xmin, double xmax, Eigen::VectorXcd& xvec, Eigen::VectorXcd& dx) {
@@ -148,32 +152,5 @@ namespace basic
                 wts(M * idx + jdx) = xwt(jdx);
             }
         }
-    }
-
-    void printClockInfo() {
-        std::cout << "\nsystem_clock: " << std::endl;
-        printClockData<std::chrono::system_clock>();
-        std::cout << "\nhigh_resolution_clock: " << std::endl;
-        printClockData<std::chrono::high_resolution_clock>();
-        std::cout << "\nsteady_clock: " << std::endl;
-        printClockData<std::chrono::steady_clock>();
-    }
-
-    void clock_stop(std::chrono::high_resolution_clock::time_point start) {
-        /// Time information
-        auto stop = std::chrono::high_resolution_clock::now();
-        auto sys_stop = std::chrono::system_clock::now();
-        double duration = static_cast<double>((std::chrono::duration_cast<std::chrono::milliseconds>(stop - start)).count());
-
-        auto endtime = std::chrono::system_clock::to_time_t(sys_stop);
-        std::cout << "\nFinished computation on " << std::ctime(&endtime);
-        if (duration < 1000.0) 
-            std::cout << "Elapsed time: " << std::fixed 
-                      << duration << " milliseconds." 
-                      << std::endl;
-        else 
-            std::cout << "Elapsed time: " << std::fixed 
-                      << duration / 1000.0 << " seconds." 
-                      << std::endl;
     }
 }
