@@ -1,7 +1,7 @@
 #include <iostream>
+#include <iomanip>
 #include <complex>
 #include <string>
-#include <numeric>
 #include <Eigen/Dense>
 #include "BasicFuncs.h"
 #include "free_2part_spec/FreeSpec.h"
@@ -9,11 +9,6 @@
 namespace {
     /// typedef for complex values
     typedef std::complex<double> cmplx;
-
-    /// General constants
-    const double pi = 3.14159265358979323846;
-    const cmplx j(0.0, 1.0);
-    const double hc = 197.3269804; // MeV*fm
 
     int usage(int argc, char** argv) {
         std::cerr << "Usage: " << argv[0] << " <input file> <output file>" << std::endl;

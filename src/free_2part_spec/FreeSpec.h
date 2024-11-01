@@ -1,5 +1,4 @@
 #include <fstream>
-#include <complex>
 #include <string>
 
 namespace FreeSpec

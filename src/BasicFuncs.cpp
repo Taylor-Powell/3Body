@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <numbers>
 #include <ctime>
 #include "BasicFuncs.h"
 
@@ -28,8 +29,8 @@ namespace {
 namespace basic
 {
     cmplx phase_space(cmplx s, double m1sq, double m2sq, double xi) {
-        if (m1sq == m2sq) return xi * q_cm(s, m1sq) / (8.0 * pi * sqrt(s));
-        return xi * q_cm_nonI(s, m1sq, m2sq) / (8.0 * pi * sqrt(s));
+        if (m1sq == m2sq) return xi * q_cm(s, m1sq) / (8.0 * std::numbers::pi * sqrt(s));
+        return xi * q_cm_nonI(s, m1sq, m2sq) / (8.0 * std::numbers::pi * sqrt(s));
     }
 
     cmplx kallen(cmplx x, cmplx y, cmplx z) {
@@ -111,10 +112,10 @@ namespace basic_Eigen
         double xr = (xmax - xmin) / 2.0;
         int N = xvec.size();
         double dt = 1.0 / ((double)(N - 1));
-        cmplx prefac = - j * pi * xr * dt;
+        cmplx prefac = - j * std::numbers::pi * xr * dt;
         for (int idx = 0; idx < N; idx++) {
-            xvec(idx) = x0 + xr * exp(-j * pi * ((double)idx * dt + 1.0));
-            dx(idx) = prefac * exp(-j * pi * ((double)idx * dt + 1.0));
+            xvec(idx) = x0 + xr * exp(-j * std::numbers::pi * ((double)idx * dt + 1.0));
+            dx(idx) = prefac * exp(-j * std::numbers::pi * ((double)idx * dt + 1.0));
             // if (idx == 0) std::cout << std::left << std::setw(23) 
             //         << "abs(dk) on contour" << " = " << abs(dx(idx)) << '\n';
             // else if (idx == N / 2) std::cout << dx(idx) << '\n';
@@ -127,10 +128,10 @@ namespace basic_Eigen
         double xr = (xmax - xmin) / 2.0;
         int N = xvec.size();
         double dt = 1.0 / ((double)(N - 1));
-        cmplx prefac = j * pi * xr * dt;
+        cmplx prefac = j * std::numbers::pi * xr * dt;
         for (int idx = 0; idx < N; idx++) {
-            xvec(idx) = x0 + xr * exp(j * pi * ((double)idx * dt - 1.0));
-            dx(idx) = prefac * exp(j * pi * ((double)idx * dt - 1.0));
+            xvec(idx) = x0 + xr * exp(j * std::numbers::pi * ((double)idx * dt - 1.0));
+            dx(idx) = prefac * exp(j * std::numbers::pi * ((double)idx * dt - 1.0));
             // if (idx == 0) std::cout << std::left << std::setw(23) 
             //         << "abs(dk) on contour" << " = " << abs(dx(idx)) << '\n';
             // else if (idx == N / 2) std::cout << dx(idx) << '\n';

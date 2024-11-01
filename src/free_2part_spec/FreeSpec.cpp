@@ -1,13 +1,9 @@
 #include <iostream>
 #include <iomanip>
-#include <fstream>
-#include <complex>
-#include <string>
 #include <sstream>
-#include <vector>
 #include <cmath>
+#include <numbers>
 #include <numeric>
-#include <Eigen/Dense>
 #include "FreeSpec.h"
 #include "../BasicFuncs.h"
 
@@ -16,7 +12,6 @@ namespace {
     typedef std::complex<double> cmplx;
 
     /// General constants
-    const double pi = 3.14159265358979323846;
     const cmplx j(0.0, 1.0);
     const double hc = 197.3269804; // MeV*fm
 }
@@ -96,7 +91,7 @@ namespace FreeSpec {
         double En, Ecm;
         int e = 0;
         bool check = true;
-        double P_sq = std::pow(2.0 * pi / L, 2);
+        double P_sq = std::pow(2.0 * std::numbers::pi / L, 2);
         // std::inner_product(address_nP[0], add_nP[2], add_nP[0], initial_value)
         P_sq *= std::inner_product(nP, nP+3, nP, 0.0);
         const int n_max = 5;
@@ -144,8 +139,8 @@ namespace FreeSpec {
             p1_sq += (double)(n[i] * n[i]);
             p2_sq += (double)((nP[i] - n[i]) * (nP[i] - n[i]));
         }
-        p1_sq *= std::pow(2.0 * pi / L, 2);
-        p2_sq *= std::pow(2.0 * pi / L, 2);
+        p1_sq *= std::pow(2.0 * std::numbers::pi / L, 2);
+        p2_sq *= std::pow(2.0 * std::numbers::pi / L, 2);
         return std::sqrt(msq[0] + p1_sq) + std::sqrt(msq[0] + p2_sq);
     }
 }

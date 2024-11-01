@@ -10,7 +10,6 @@
 namespace basic
 {
     typedef std::complex<double> cmplx;
-    const double pi = 3.14159265358979323846;
     const cmplx j(0.0, 1.0);
 
     // Function declarations
@@ -62,7 +61,6 @@ namespace basic
 namespace basic_Eigen 
 {
     typedef std::complex<double> cmplx;
-    const double pi = 3.14159265358979323846;
     const cmplx j(0.0, 1.0);
     
     // Function declarations
