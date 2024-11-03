@@ -1,4 +1,5 @@
 #include <fstream>
+#include <vector>
 #include <string>
 
 namespace FreeSpec
@@ -9,11 +10,13 @@ namespace FreeSpec
             Data() {}
             Data(std::string infile_name) { 
                 infile = infile_name;
+                Lmin = Lmax = dL = Emax = msq[0] = -1.0;
                 readData(infile_name); 
             }
             Data(std::string infile_name, std::string outfile_name) { 
                 infile = infile_name;
                 outfile = outfile_name;
+                Lmin = Lmax = dL = Emax = msq[0] = -1.0;
                 readData(infile);
             }
             ~Data() {}

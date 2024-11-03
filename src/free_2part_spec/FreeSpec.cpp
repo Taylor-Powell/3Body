@@ -30,7 +30,11 @@ namespace FreeSpec {
             while (std::getline(file, var)) {
                 std::stringstream param(var);
                 std::getline(param, var, '=');
-                if (var == "nP") param >> nP_str;
+                if (var == "nP") {
+                    param >> nP_str;
+                    std::vector<char> v(nP_str.begin(), nP_str.end());
+                    for (int i = 0; i < 3; i++) nP[i] = v[i] - '0';
+                }
                 else if (var == "Lmin") param >> Lmin;
                 else if (var == "Lmax") param >> Lmax;
                 else if (var == "dL") param >> dL;
@@ -38,6 +42,15 @@ namespace FreeSpec {
                 else if (var == "msq") param >> msq[0];
                 else continue;
             }
+        }
+        double eps = 1.0e-12;
+        if ((Lmin < 0.0) || (Lmax < 0.0) || (dL < 0.0) || (Emax < 0.0) || (msq[0] < 0.0) || (nP_str == "")) {
+            std::cout << "Printing file parameters as read from file:\n";
+            printParams();
+
+            std::string errmsg = "One or more variables not initialized in ";
+            errmsg += __func__;
+            throw(errmsg);
         }
     }
 
