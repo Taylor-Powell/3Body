@@ -3,8 +3,8 @@
 #include <complex>
 #include <string>
 #include <Eigen/Dense>
-#include "BasicFuncs.h"
-#include "free_2part_spec/FreeSpec.h"
+#include "../lib/BasicFuncs.h"
+#include "../lib/FreeSpec.h"
 
 namespace {
     /// typedef for complex values

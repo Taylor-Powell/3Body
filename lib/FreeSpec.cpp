@@ -5,7 +5,7 @@
 #include <numbers>
 #include <numeric>
 #include "FreeSpec.h"
-#include "../BasicFuncs.h"
+#include "BasicFuncs.h"
 
 namespace {
     /// typedef for complex values
