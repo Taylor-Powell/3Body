@@ -17,7 +17,7 @@ namespace {
     const cd j(0.0, 1.0);
 }
 
-namespace FreeSpec {
+namespace Free2Part {
     void Data::readData(std::string infile_name) {
         std::ifstream file (infile);
         if (!file) {
@@ -98,7 +98,7 @@ namespace FreeSpec {
         else {
             while (!Lvals.empty()) {
                 double L = Lvals.back();
-                std::vector<double> Free_E1 = gen_free_spec_2part(L, Emax, msq[0], msq[0], nP, 'A');
+                std::vector<double> Free_E1 = FreeSpec::gen_free_spec_2part(L, Emax, msq[0], msq[0], nP, 'A');
                 out << L;
                 for (int i = 0; i < Free_E1.size(); i++) out << ' ' << Free_E1[i];
                 Lvals.pop_back();

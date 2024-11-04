@@ -1,5 +1,6 @@
 set(EXES
     free_2part
+    free_coupled22
 )
 
 foreach(EXE ${EXES})

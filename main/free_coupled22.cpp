@@ -4,7 +4,7 @@
 #include <string>
 #include <Eigen/Dense>
 #include "../lib/BasicFuncs.h"
-#include "../lib/Free2Particle.h"
+#include "../lib/Coupled22.h"
 
 namespace {
     /// typedef for complex values
@@ -23,11 +23,11 @@ int main(int argc, char** argv) {
     try {
         std::string paramfile = argv[1];
         std::cout << "Reading data from " << paramfile << std::endl;
-        Free2Part::Data data(paramfile);
+        coupled22::Data data(paramfile);
         std::cout << "Finished reading data.\n" << std::endl;
 
         std::cout << "Computing and writing out free spectrum." << std::endl;
-        data.free_2_out();
+        data.freeSpecOut();
         std::cout << "Finished writing out free spectrum." << std::endl;
     }
     catch (std::string s) {

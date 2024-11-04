@@ -4,8 +4,7 @@
 #include <vector>
 #include <string>
 
-namespace FreeSpec
-{
+namespace Free2Part {
     class Data {
         public:
             // Constructors and Destructor
@@ -14,13 +13,6 @@ namespace FreeSpec
                 infile = infile_name;
                 Lmin = Lmax = dL = Emax = msq[0] = -1.0;
                 readData(infile_name); 
-                setOutfile();
-            }
-            Data(std::string infile_name, std::string outfile_name) { 
-                infile = infile_name;
-                outfile = outfile_name;
-                Lmin = Lmax = dL = Emax = msq[0] = -1.0;
-                readData(infile);
                 setOutfile();
             }
             ~Data() {}
