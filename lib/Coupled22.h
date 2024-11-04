@@ -23,6 +23,7 @@ namespace coupled22 {
             void setOutfile();
             void printParams();
             void freeSpecOut();
+            void intSpecOut();
 
         private:
             int nDivs, nShell, nStates, nP[3];

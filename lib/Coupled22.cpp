@@ -117,8 +117,8 @@ namespace coupled22 {
             + "_Emax_" + std::to_string((int)Emax)
             + "_nP_" + nP_str
             + ".dat";
-        std::string out1 = "data/coupled22/m_" + std::to_string((int)m[0]) + f_end;
-        std::string out2 = "data/coupled22/m_" + std::to_string((int)m[1]) + f_end;
+        std::string out1 = "data/coupled22/freeSpec_m_" + std::to_string((int)m[0]) + f_end;
+        std::string out2 = "data/coupled22/freeSpec_m_" + std::to_string((int)m[1]) + f_end;
         std::ofstream outf1, outf2;
         outf1.open(out1, std::ios::out | std::ios::trunc);
         outf2.open(out2, std::ios::out | std::ios::trunc);
@@ -145,4 +145,45 @@ namespace coupled22 {
         }
             
     }
+
+    void Data::intSpecOut() {
+        std::string out = "data/coupled22/intSpec_m1_"
+            + std::to_string((int)m[0])
+            + "_m2_" + std::to_string((int)m[1])
+            + "_L_" + std::to_string((int)Lmin)
+            + "_to_" + std::to_string((int)Lmax)
+            + "_dL_" + std::to_string((int)dL) 
+            + '.' + std::to_string((int)((dL - (int)dL) * 100))
+            + "_Emax_" + std::to_string((int)Emax)
+            + "_nP_" + nP_str
+            + ".dat";
+        std::ofstream outf;
+        outf.open(out, std::ios::out | std::ios::trunc);
+        if (!outf) {
+            std::string errormsg = "Failed to open file in ";
+            errormsg += __func__;
+            throw errormsg;
+        }
+        else {
+            int counter;
+            while (!Lvals.empty()) {
+                double L = Lvals.back();
+                std::vector<double> Free_Es = FreeSpec::gen_free_spec_2part(L / hc, Emax, m[0] * m[0], m[0] * m[0], nP, 'A');
+                std::vector<double> Free_E2 = FreeSpec::gen_free_spec_2part(L / hc, Emax, m[1] * m[1], m[1] * m[1], nP, 'A');
+                Free_Es.insert(Free_Es.end(), Free_E2.begin(), Free_E2.end());
+
+                basic::sort_vec(Free_Es, 'A');
+                std::vector<double> intEs(nStates, 0.0);
+
+                //////// WORK IN PROGRESS
+                
+                Lvals.pop_back();
+                if (!Lvals.empty()) {
+                    outf << '\n';
+                }
+            }
+        }
+    }
+
+
 }

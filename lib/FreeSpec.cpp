@@ -4,6 +4,9 @@
 #include "BasicFuncs.h"
 #include "FreeSpec.h"
 
+namespace {
+    const std::complex<double> j(0.0, 1.0);
+}
 namespace FreeSpec
 {
     // Generic functions

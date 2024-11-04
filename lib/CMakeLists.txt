@@ -6,6 +6,7 @@ target_link_libraries(3Body Eigen3::Eigen)
 
 set(3BODY_HDRS
     BasicFuncs.h
+    Amps.h
     FreeSpec.h
     Free2Particle.h
     Coupled22.h
@@ -15,6 +16,7 @@ install(FILES ${3BODY_HDRS} DESTINATION include/3Body)
 
 target_sources(3Body PUBLIC
     BasicFuncs.cpp
+    Amps.cpp
     FreeSpec.cpp
     Free2Particle.cpp
     Coupled22.cpp
