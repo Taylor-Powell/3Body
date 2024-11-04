@@ -4,7 +4,7 @@
 #include <string>
 #include <Eigen/Dense>
 #include "../lib/BasicFuncs.h"
-#include "../lib/FreeSpec.h"
+#include "../lib/Free2Particle.h"
 
 namespace {
     /// typedef for complex values
@@ -27,7 +27,9 @@ int main(int argc, char** argv) {
         FreeSpec::Data data(paramfile, outfile);
         std::cout << "Finished reading data." << std::endl;
 
-        data.printParams();
+        data.free_2_out();
+
+        
     }
     catch (std::string s) {
         std::cout << "\n\nERROR IN PROGRAM:\n" << s << std::endl;

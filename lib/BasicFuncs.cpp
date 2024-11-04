@@ -4,8 +4,6 @@
 #include <ctime>
 #include "BasicFuncs.h"
 
-// 
-
 namespace {    
     // Code taken from The C++ Standard Library, 2nd Edition by Nicolai M. Josuttis
     template <typename C>

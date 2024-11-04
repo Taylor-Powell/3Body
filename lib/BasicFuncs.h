@@ -4,7 +4,6 @@
 #include <complex>
 #include <chrono>
 #include <string>
-#include <vector>
 #include <Eigen/Dense>
 
 namespace basic
@@ -48,7 +47,38 @@ namespace basic
         T2 left = (Q[0][0] * (x[2] - x[1]) + Q[1][0] * (x[1] - x[0])) / (x[2] - x[0]);
         T2 right = (Q[0][1] * (x[2] - x[1]) + Q[1][1] * (x[1] - x[0])) / (x[2] - x[0]);
         return ((left * (y[2] - y[1]) + right * (y[1] - y[0])) / (y[2] - y[1]));
-    }   
+    }
+
+    template <typename TE>
+	void sort_vec(TE& x, char flag) {
+        // Initialize variables
+        auto minx = x[0], tempx = x[0];
+        int n = x.size();
+
+        // Each loop here results in the next smallest value being
+        // sorted to top of the subarray
+        for (int idx = 0; idx < n; idx++)
+        {
+            minx = x[idx];
+            for (int jdx = idx; jdx < n; jdx++)
+            {
+                if ((x[jdx] > minx) && (flag == 'D'))
+                {
+                    tempx = minx;
+                    minx = x[jdx];
+                    x[jdx] = tempx;
+                    x[idx] = minx;
+                }
+                else if ((x[jdx] < minx) && (flag == 'A'))
+                {
+                    tempx = minx;
+                    minx = x[jdx];
+                    x[jdx] = tempx;
+                    x[idx] = minx;
+                }
+            }
+        }
+    }
 
     //////////////////// Timing Functions /////////////////////
     void printClockInfo();
@@ -98,37 +128,6 @@ namespace basic_Eigen
             A(i) = gamma * (Apar - A0 * beta(i)) + Aper;
         }
         A0 = gamma * (A0 - tmp);
-    }
-
-    template <typename TE>
-	void sort_vec(TE& x, char flag) {
-        // Initialize variables
-        auto minx = x[0], tempx = x[0];
-        int n = x.size();
-
-        // Each loop here results in the next smallest value being
-        // sorted to top of the subarray
-        for (int idx = 0; idx < n; idx++)
-        {
-            minx = x[idx];
-            for (int jdx = idx; jdx < n; jdx++)
-            {
-                if ((x[jdx] > minx) && (flag == 'D'))
-                {
-                    tempx = minx;
-                    minx = x[jdx];
-                    x[jdx] = tempx;
-                    x[idx] = minx;
-                }
-                else if ((x[jdx] < minx) && (flag == 'A'))
-                {
-                    tempx = minx;
-                    minx = x[jdx];
-                    x[jdx] = tempx;
-                    x[idx] = minx;
-                }
-            }
-        }
     }
 
     template <typename T, typename TE>

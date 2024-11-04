@@ -1,7 +1,7 @@
 Input param file for free 2body spec
-Lmin=1.0
-Lmax=4.0
-dL=0.5
+Lmin=2.0
+Lmax=8.0
+dL=0.1
 nP=000
-Emax=3.0
+Emax=5.0
 msq=1.0
