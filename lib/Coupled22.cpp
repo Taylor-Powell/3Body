@@ -5,6 +5,7 @@
 #include <cmath>
 #include <numbers>
 #include <numeric>
+#include <filesystem>
 #include "FreeSpec.h"
 #include "Coupled22.h"
 #include "BasicFuncs.h"
@@ -25,34 +26,33 @@ namespace coupled22 {
             std::string errormsg = "Failed to open file in ";
             errormsg += __func__;
             throw errormsg;
+            return;
         }
-        else {
-            std::string ignore, var, val;
-            
-            while (std::getline(file, var)) {
-                std::stringstream param(var);
-                std::getline(param, var, '=');
-                if (var == "nP") {
-                    param >> nP_str;
-                    std::vector<char> v(nP_str.begin(), nP_str.end());
-                    for (int i = 0; i < 3; i++) nP[i] = v[i] - '0';
-                }
-                else if (var == "Lmin") param >> Lmin;
-                else if (var == "Lmax") param >> Lmax;
-                else if (var == "dL") param >> dL;
-                else if (var == "Emax") param >> Emax;
-                else if (var == "at") param >> at;
-                else if (var == "nDivs") param >> nDivs;
-                else if (var == "nShell") param >> nShell;
-                else if (var == "nStates") param >> nStates;
-                else if (var == "m1") param >> m[0];
-                else if (var == "m2") param >> m[1];
-                else if (var == "mF") param >> mFlatte;
-                else if (var == "g1") param >> g[0];
-                else if (var == "g2") param >> g[1];
-                else if (var == "alpha") param >> alpha;
-                else continue;
+        std::string ignore, var, val;
+        
+        while (std::getline(file, var)) {
+            std::stringstream param(var);
+            std::getline(param, var, '=');
+            if (var == "nP") {
+                param >> nP_str;
+                std::vector<char> v(nP_str.begin(), nP_str.end());
+                for (int i = 0; i < 3; i++) nP[i] = v[i] - '0';
             }
+            else if (var == "Lmin") param >> Lmin;
+            else if (var == "Lmax") param >> Lmax;
+            else if (var == "dL") param >> dL;
+            else if (var == "Emax") param >> Emax;
+            else if (var == "at") param >> at;
+            else if (var == "nDivs") param >> nDivs;
+            else if (var == "nShell") param >> nShell;
+            else if (var == "nStates") param >> nStates;
+            else if (var == "m1") param >> m[0];
+            else if (var == "m2") param >> m[1];
+            else if (var == "mF") param >> mFlatte;
+            else if (var == "g1") param >> g[0];
+            else if (var == "g2") param >> g[1];
+            else if (var == "alpha") param >> alpha;
+            else continue;
         }
         
         double eps = 1.0e-10;;
@@ -110,6 +110,9 @@ namespace coupled22 {
     }
 
     void Data::freeSpecOut() {
+        // Ensure output directory exists
+        std::filesystem::create_directories("data/coupled22");
+
         std::string f_end = + "_L_" + std::to_string((int)Lmin)
             + "_to_" + std::to_string((int)Lmax)
             + "_dL_" + std::to_string((int)dL) 
@@ -125,6 +128,8 @@ namespace coupled22 {
         if ((!outf1) || (!outf2)) {
             std::string errormsg = "Failed to open file in ";
             errormsg += __func__;
+            if (!outf1) errormsg += "\nCould not open: " + out1;
+            if (!outf2) errormsg += "\nCould not open: " + out2;
             throw errormsg;
         }
         else {
@@ -147,6 +152,9 @@ namespace coupled22 {
     }
 
     void Data::intSpecOut() {
+        // Ensure output directory exists
+        std::filesystem::create_directories("data/coupled22");
+
         std::string out = "data/coupled22/intSpec_m1_"
             + std::to_string((int)m[0])
             + "_m2_" + std::to_string((int)m[1])
@@ -160,8 +168,7 @@ namespace coupled22 {
         std::ofstream outf;
         outf.open(out, std::ios::out | std::ios::trunc);
         if (!outf) {
-            std::string errormsg = "Failed to open file in ";
-            errormsg += __func__;
+            std::string errormsg = "Could not open: " + out + " in " + __func__;
             throw errormsg;
         }
         else {
