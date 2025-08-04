@@ -3,12 +3,12 @@
 ## Purpose
 This code is intended to be a compilation of the various programs I wrote during research with Dr. Raul Briceno and Dr. Andrew Jackura during undergrad. I will list functionality sorted by executables located in _main/_
 
-### free_2part.cpp
+### main/free_2part.cpp
 This is the simplest code in use. A sample input parameter file is located in _inputs/params_free2part.dat_.
 
-The code instantiates the Free2Part::Data class, which takes the parameter file as an input. The class is defined in _Free2Part.h_. The constructor sets a few private variables and then reads the parameters from the input file, throwing an error if any necessary values are omitted. The constructor also sets the output filename based on provided parameters (this avoids potential name conflicts from generic naming of output files).
+The code instantiates the Free2Part::Data class, which takes the parameter file as an input. The class is defined in _lib/Free2Part.h_. The constructor sets a few private variables and then reads the parameters from the input file, throwing an error if any necessary values are omitted. The constructor also sets the output filename based on provided parameters (this avoids potential name conflicts from generic naming of output files).
 
-After creating the class, the main function calls the _free_2_out()_ function. This iterates over each box side length $L$ and calls _gen_free_spec_2part()_ from _FreeSpec.h_. The non-interacting spectrum for each box size for the particle masses provided is then computed according to
+After creating the class, the main function calls the _free_2_out()_ function. This iterates over each box side length $L$ and calls _gen_free_spec_2part()_ from _lib/FreeSpec.h_. The non-interacting spectrum for each box size for the particle masses provided is then computed according to
 
 $$E_n=\sqrt{m_1^2+\left(\frac{2\pi}{L}\vec{n}_1\right)^2}+\sqrt{m_2^2+\left(\frac{2\pi}{L}\vec{n}_2\right)^2}$$
 
@@ -24,10 +24,10 @@ After the spectrum is computed for each volume, it is sorted and printed to the 
 
 As seen in the table, as the box size decreases, the number of accessible energy levels below $E_{\text{max}}$ will necessarily decrease. The output is formatted so the first row contains the most energy levels, which makes it easier to plot in many scripting languages.
 
-### free_coupled22.cpp
-This runs in a similar manner to _free_2part.cpp_, except now the input parameter file is split into global, volume, and particle parameters. 
+### main/free_coupled22.cpp
+This runs in a similar manner to _main/free_2part.cpp_, except now the input parameter file is split into global, volume, and particle parameters. 
 
-After initializing the Coupled22::Data class, the constructor again reads the input file and throws an error if something wasn't properly initialized. After creating the class, the main function calls the _freeSpecOut()_ function, which builds and outputs the non-interacting spectrum for each box volume to two separate output .dat files in _data/coupled22/_ for later use.
+After initializing the Coupled22::Data class, the constructor again reads the input file and throws an error if something wasn't properly initialized. After creating the class, the main function calls the _freeSpecOut()_ function, which builds and outputs the non-interacting spectrum for each box volume to two separate .dat files in _data/coupled22/_ for later use.
 
-### intspec_coupled22.cpp
+### main/intspec_coupled22.cpp
 Work in progress.
